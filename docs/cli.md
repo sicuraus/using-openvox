@@ -227,7 +227,7 @@ $ puppet resource package bind-utils ensure=present
 
 It can even modify existing resources interactively using the `--edit` option:
 
-<video src="../assets/resourceedit.ogv" width="900" controls loop muted playsinline></video>
+<video src="../assets/resourceedit.mp4" width="900" controls loop muted playsinline preload="metadata"></video>
 
 ## `puppet lookup`
 
