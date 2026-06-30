@@ -27,7 +27,8 @@ This content was rebranded from Puppet to OpenVox. When editing, keep these conv
 
 - **OpenVox** = the platform/product/project/company, packages, repos, and docs. **Puppet** stays for the *language/DSL*, the `puppet` command (there is no `openvox` executable), `.pp` manifests, and file paths (`/etc/puppetlabs`, `/opt/puppetlabs` are retained by OpenVox).
 - Packages: `puppet-agent` → `openvox-agent`, `puppetserver` → `openvox-server`. Repos: `*.voxpupuli.org` (not `*.puppet.com`).
-- Companion tools were renamed in OpenVox docs: Facter → **OpenFact**, Bolt → **OpenBolt**, PDK → **DevKit** (the `facter`/`pdk` commands themselves still work).
+- Companion tools were renamed in OpenVox docs: Facter → **OpenFact**, Bolt → **OpenBolt** (the `facter` command itself still works).
+- Module-development tooling: the course recommends **[jig](https://github.com/voxpupuli/jig)** (a Go-based PDK replacement: `jig new module/class`, `jig validate`, `jig test unit`) plus **[voxbox](https://github.com/voxpupuli/container-voxbox)** (a container running the full `rake` test toolchain). Do not reintroduce `pdk`.
 - "master" → "server" in prose/diagrams (matches `openvox-server`).
 - The **Puppet Forge** stays at `forge.puppet.com` and `puppetlabs-*` module names are unchanged.
 - **Literal command output** in ```` ```console ```` blocks is kept verbatim — it may still say `puppet master` or `puppet.com`, because that is what the tool actually prints.
@@ -40,6 +41,5 @@ Reference links map from the old `puppet.com/docs/*` to OpenVox docs:
 - `facter/latest/*` → `docs.openvoxproject.org/openfact/latest/*`
 - `bolt/latest/*` → `docs.openvoxproject.org/openbolt/latest/*`
 - `pe/latest/designing_system_configs_roles_and_profiles.html` → `openvox/latest/the_roles_and_profiles_method.html`
-- `pdk/latest/*` → `docs.openvoxproject.org/ecosystem/latest/devkit/`
 
 Not every page exists on the OpenVox docs site — verify new doc links resolve (a 404 check) before adding them, since `mkdocs build --strict` only validates *internal* links, not external ones.

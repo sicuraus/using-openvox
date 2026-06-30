@@ -200,29 +200,43 @@ module.
 
 ## Developing modules
 
-The Puppet Development Kit (`pdk`) can manage the lifecycle of a module:
-creating a new module, validating style and syntax, running tests, and more. The
-`pdk` command continues to work with OpenVox.
+The Vox Pupuli community provides two complementary tools for managing the
+lifecycle of a module:
 
-!!! note "OpenVox DevKit"
-    Vox Pupuli now maintains the
-    [DevKit](https://docs.openvoxproject.org/ecosystem/latest/devkit/), the
-    OpenVox-native successor to the PDK for creating and testing modules. If
-    you're starting fresh, it's worth a look; the workflow below uses `pdk`,
-    which remains widely used and compatible.
+* **[jig](https://github.com/voxpupuli/jig)** — a Go-based reimplementation of
+  the Puppet Development Kit (PDK). It ships as a single static binary with no
+  Ruby runtime, and it scaffolds modules, creates classes, validates style and
+  syntax, and runs unit tests.
+* **[voxbox](https://github.com/voxpupuli/container-voxbox)** — a container
+  image bundling the full Vox Pupuli testing toolchain (OpenVox, OpenFact,
+  `r10k`, `rubocop`, `voxpupuli-test`, and more). It lets you run a module's
+  complete `rake` test suite via Podman or Docker without installing any Ruby
+  gems locally — which is especially handy in CI.
+
+Use `jig` for day-to-day scaffolding and quick checks, and reach for `voxbox`
+when you want the full test matrix in a reproducible environment.
+
+!!! note "Installing the tools"
+    `jig` is distributed as a static binary (see the
+    [jig repository](https://github.com/voxpupuli/jig) for the latest release or
+    to build from source with Go). `voxbox` requires only Podman or Docker; it is
+    pulled automatically the first time you run it.
+
+### Using `jig`
 
 !!! tip "Try it yourself: create a module"
     Create a new module named `mytest`:
 
     ```console
-    $ pdk new module mytest
+    $ jig new module mytest
     ```
 
-    `pdk` will ask you a few questions and use the answers to generate the
-    module's `metadata.json`.
+    `jig` will ask you a few questions and use the answers to generate the
+    module's `metadata.json`. (Pass `--skip-interview` to accept defaults
+    non-interactively.)
 
 !!! tip "Try it yourself: examine metadata.json"
-    Run `cd mytest` to enter the directory `pdk` created, then examine the
+    Run `cd mytest` to enter the directory `jig` created, then examine the
     contents of `metadata.json`. Note what was added based on your answers and
     what was added automatically.
 
@@ -230,7 +244,7 @@ creating a new module, validating style and syntax, running tests, and more. The
     From the `mytest` directory:
 
     ```console
-    $ pdk new class mytest
+    $ jig new class mytest
     ```
 
     Note the files that are created, and examine their contents.
@@ -239,19 +253,39 @@ creating a new module, validating style and syntax, running tests, and more. The
     From the `mytest` directory:
 
     ```console
-    $ pdk validate
+    $ jig validate
     ```
 
     This runs syntax and style checks against the module.
-    `pdk validate -a` can fix many common style issues in a module's Puppet and
-    Ruby code automatically.
 
 !!! tip "Try it yourself: unit tests"
     From the `mytest` directory:
 
     ```console
-    $ pdk test unit
+    $ jig test unit
     ```
 
     This runs the tests defined in `spec/classes/`. The generated spec tests
     only check that the code compiles into a catalog.
+
+### Using `voxbox`
+
+When you want to run the full test suite in a container instead of installing
+the toolchain locally, mount the module directory into `voxbox`. Its default
+entrypoint is `rake`, so you can call any rake task directly.
+
+!!! tip "Try it yourself: run the test suite in a container"
+    From the `mytest` directory, list the available rake tasks:
+
+    ```console
+    $ podman run -it --rm -v $PWD:/repo:Z ghcr.io/voxpupuli/voxbox:8
+    ```
+
+    Run the unit tests (`rspec-puppet`):
+
+    ```console
+    $ podman run -it --rm -v $PWD:/repo:Z ghcr.io/voxpupuli/voxbox:8 spec
+    ```
+
+    Substitute `docker` for `podman` if that's what you have. The `:Z` SELinux
+    label on the volume can be dropped on systems without SELinux.
