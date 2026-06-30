@@ -92,12 +92,14 @@ When evaluating a module from the search results, pay attention to:
 * **Date of the last release.** Modules from before ~2016 are unlikely to follow
   current best practices.
 * **Number of downloads.**
-* **Code quality rating.**
+* **Quality score.**
 
 The page for each module contains a large amount of information, most of which
-comes directly from the module's `metadata.json`:
+comes directly from the module's `metadata.json`. This is the page for the
+[`puppet/archive`](https://forge.puppet.com/modules/puppet/archive) module
+maintained by Vox Pupuli:
 
-![simp-auditd module page](assets/forge/simp-auditd.png)
+![puppet/archive module page](assets/forge/module-page.png)
 
 Highlights to look for on a module page:
 
@@ -107,9 +109,10 @@ Highlights to look for on a module page:
 * **Tags** from `metadata.json` are used in search
 * **Installation** instructions and direct download of current or previous
   versions
-* Hover over an OS to see the supported major versions
+* A **compatibility** section lists the supported Puppet versions and operating
+  systems
 
-![Supported OS versions](assets/forge/osversion.png)
+![Supported operating systems](assets/forge/os-support.png)
 
 !!! tip "Try it yourself"
     [Explore the Puppet Forge.](https://forge.puppet.com/)
