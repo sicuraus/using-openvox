@@ -43,3 +43,33 @@ Reference links map from the old `puppet.com/docs/*` to OpenVox docs:
 - `pe/latest/designing_system_configs_roles_and_profiles.html` → `openvox/latest/the_roles_and_profiles_method.html`
 
 Not every page exists on the OpenVox docs site — verify new doc links resolve (a 404 check) before adding them, since `mkdocs build --strict` only validates *internal* links, not external ones.
+
+## Refreshing the Forge screenshots
+
+`docs/ecosystem.md` embeds screenshots of `forge.puppet.com` (in
+`docs/assets/forge/`). Because they capture a third-party UI, they go stale as
+that site changes. They are regenerated with a committed Playwright script —
+**do not hand-place new screenshots ad hoc; re-run the script** so the set stays
+consistent:
+
+```bash
+npm i -D playwright-core        # one-time; uses the system Google Chrome via channel:'chrome'
+node tools/capture-forge-screenshots.mjs
+```
+
+Notes on the approach (see `tools/capture-forge-screenshots.mjs`):
+
+- It drives the **system Google Chrome** (`channel: 'chrome'`), so no bundled
+  browser download is needed. Chrome and a network path to `forge.puppet.com`
+  must be available.
+- It dismisses the cookie-consent banner ("Accept All Cookies") before
+  capturing.
+- `search.png` is an **element** screenshot of the search dropdown so the
+  intermittent marketing popup is excluded; capturing the full viewport there
+  catches the popup.
+- The module-page example is **`puppet/archive`** (a Vox Pupuli / `puppet`
+  namespace module). Change the `MODULE` constant in the script to use a
+  different one.
+- Output is high-DPI (`deviceScaleFactor: 2`). The five files are
+  `mainpage.png`, `search.png`, `searchresults.png`, `module-page.png`, and
+  `os-support.png`; keep those names (they are referenced in `ecosystem.md`).
